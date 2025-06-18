@@ -6,7 +6,8 @@ from db.models import Order, Ticket
 User = get_user_model()
 
 
-def create_order(tickets: list[dict], username: str, date: str | None = None) -> Order:
+def create_order(tickets: list[dict], username: str,
+                 date: str | None = None) -> Order:
     user = User.objects.get(username=username)
 
     with transaction.atomic():
@@ -27,5 +28,6 @@ def create_order(tickets: list[dict], username: str, date: str | None = None) ->
 
 def get_orders(username: str | None = None) -> QuerySet[Order]:
     if username:
-        return Order.objects.filter(user__username=username).order_by("-created_at")
+        return (Order.objects.filter(user__username=username)
+                .order_by("-created_at"))
     return Order.objects.all().order_by("-created_at")
